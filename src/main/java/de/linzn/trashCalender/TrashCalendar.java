@@ -11,9 +11,10 @@
 
 package de.linzn.trashCalender;
 
-import de.azcore.azcoreRuntime.AppLogger;
-import de.azcore.azcoreRuntime.utils.Color;
+
 import de.linzn.trashCalender.objects.ITrash;
+import de.stem.stemSystem.AppLogger;
+import de.stem.stemSystem.utils.Color;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.model.Calendar;

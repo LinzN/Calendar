@@ -12,12 +12,13 @@
 package de.linzn.trashCalender;
 
 
-import de.azcore.azcoreRuntime.AZCoreRuntimeApp;
-import de.azcore.azcoreRuntime.modules.pluginModule.AZPlugin;
+
 import de.linzn.trashCalender.callback.EVSCallback;
+import de.stem.stemSystem.STEMSystemApp;
+import de.stem.stemSystem.modules.pluginModule.STEMPlugin;
 
 
-public class TrashCalenderPlugin extends AZPlugin {
+public class TrashCalenderPlugin extends STEMPlugin {
 
     public static TrashCalenderPlugin trashCalenderPlugin;
     private TrashCalendar trashCalendar;
@@ -29,7 +30,7 @@ public class TrashCalenderPlugin extends AZPlugin {
     @Override
     public void onEnable() {
         this.getDefaultConfig().save();
-        AZCoreRuntimeApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
+        STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
         this.trashCalendar = new TrashCalendar();
     }
 
