@@ -30,4 +30,9 @@ public class GreenTrash implements ITrash {
     public String getName() {
         return "Biotonne";
     }
+
+    @Override
+    public TrashType getType() {
+        return TrashType.GREEN;
+    }
 }

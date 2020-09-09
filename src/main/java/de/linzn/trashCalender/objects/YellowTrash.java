@@ -30,4 +30,9 @@ public class YellowTrash implements ITrash {
     public String getName() {
         return "Gelber Sack";
     }
+
+    @Override
+    public TrashType getType() {
+        return TrashType.YELLOW;
+    }
 }

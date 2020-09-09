@@ -45,4 +45,6 @@ public interface ITrash {
     Date getDate();
 
     String getName();
+
+    TrashType getType();
 }

@@ -13,7 +13,8 @@ package de.linzn.trashCalender;
 
 
 import de.linzn.trashCalender.objects.ITrash;
-import de.stem.stemSystem.AppLogger;
+import de.linzn.trashCalender.objects.TrashType;
+import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.utils.Color;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -31,10 +32,38 @@ public class TrashCalendar {
     public File calenderFile;
     public File blueCalenderFile;
     private Calendar calendar;
-    private Calendar blueCalendar;
+    //private Calendar blueCalendar;
 
     public TrashCalendar() {
         this.loadCalendar();
+    }
+
+
+    public ITrash getNextTrash(TrashType trashType) {
+        Date date = new Date();
+        java.util.Calendar tempCalendar = java.util.Calendar.getInstance();
+        tempCalendar.setTime(date);
+        tempCalendar.set(java.util.Calendar.MILLISECOND, 0);
+        tempCalendar.set(java.util.Calendar.SECOND, 0);
+        tempCalendar.set(java.util.Calendar.MINUTE, 0);
+        tempCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
+        date = tempCalendar.getTime();
+
+        if (calendar != null) {
+            for (Object o : calendar.getComponents("VEVENT")) {
+                VEvent vEvent = (VEvent) o;
+                long dateToday = date.getTime();
+                long dateEvent = vEvent.getStartDate().getDate().getTime();
+
+                if ((dateEvent - dateToday >= 0)) {
+                    ITrash iTrash = ITrash.getTrash(vEvent);
+                    if (iTrash.getType() == trashType) {
+                        return iTrash;
+                    }
+                }
+            }
+        }
+        return null;
     }
 
 
@@ -63,6 +92,7 @@ public class TrashCalendar {
         }
 
         /* Temp solution todo */
+        /*
         if (blueCalendar != null) {
             for (Object o : blueCalendar.getComponents("VEVENT")) {
                 VEvent vEvent = (VEvent) o;
@@ -76,22 +106,28 @@ public class TrashCalendar {
                 }
             }
         }
-
+        */
         return iTrashes;
     }
 
     public void loadCalendar() {
         this.calenderFile = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "EVSTrash.ics");
         this.blueCalenderFile = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "BlaueTonne.ics");
+        Calendar blueCalendar = null;
         if (this.calenderFile.exists()) {
             try {
                 calendar = new CalendarBuilder().build(new FileInputStream(this.calenderFile));
                 blueCalendar = new CalendarBuilder().build(new FileInputStream(this.blueCalenderFile));
-                AppLogger.debug(Color.GREEN + "New calender data loaded");
+                STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data loaded");
             } catch (IOException | ParserException e) {
                 e.printStackTrace();
             }
         }
-    }
 
+        if (blueCalendar != null) {
+            for (Object o : blueCalendar.getComponents("VEVENT")) {
+                this.calendar.getComponents().add((VEvent) o);
+            }
+        }
+    }
 }

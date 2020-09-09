@@ -30,4 +30,9 @@ public class BlueTrash implements ITrash {
     public String getName() {
         return "Blaue Tonne";
     }
+
+    @Override
+    public TrashType getType() {
+        return TrashType.BLUE;
+    }
 }
