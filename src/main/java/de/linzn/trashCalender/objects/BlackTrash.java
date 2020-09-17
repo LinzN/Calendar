@@ -28,7 +28,7 @@ public class BlackTrash implements ITrash {
 
     @Override
     public String getName() {
-        return "Restabfalltonne";
+        return "Schwarze Tonne";
     }
 
     @Override

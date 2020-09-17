@@ -28,7 +28,7 @@ public class GreenTrash implements ITrash {
 
     @Override
     public String getName() {
-        return "Biotonne";
+        return "Bio Tonne";
     }
 
     @Override
