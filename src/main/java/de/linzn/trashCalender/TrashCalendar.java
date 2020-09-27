@@ -12,7 +12,7 @@
 package de.linzn.trashCalender;
 
 
-import de.linzn.trashCalender.objects.ITrash;
+import de.linzn.trashCalender.objects.ICalendarType;
 import de.linzn.trashCalender.objects.TrashType;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.utils.Color;
@@ -29,17 +29,14 @@ import java.util.Date;
 import java.util.List;
 
 public class TrashCalendar {
-    public File calenderFile;
-    public File blueCalenderFile;
     private Calendar calendar;
-    //private Calendar blueCalendar;
 
     public TrashCalendar() {
         this.loadCalendar();
     }
 
 
-    public ITrash getNextTrash(TrashType trashType) {
+    public ICalendarType getNextTrash(TrashType trashType) {
         Date date = new Date();
         java.util.Calendar tempCalendar = java.util.Calendar.getInstance();
         tempCalendar.setTime(date);
@@ -56,7 +53,7 @@ public class TrashCalendar {
                 long dateEvent = vEvent.getStartDate().getDate().getTime();
 
                 if ((dateEvent - dateToday >= 0)) {
-                    ITrash iTrash = ITrash.getTrash(vEvent);
+                    ICalendarType iTrash = ICalendarType.getCalendarTypeInstance(vEvent);
                     if (iTrash.getType() == trashType) {
                         return iTrash;
                     }
@@ -67,7 +64,7 @@ public class TrashCalendar {
     }
 
 
-    public List<ITrash> getTrashList(Date date) {
+    public List<ICalendarType> getCalenderEntriesList(Date date) {
         java.util.Calendar tempCalendar = java.util.Calendar.getInstance();
         tempCalendar.setTime(date);
         tempCalendar.set(java.util.Calendar.MILLISECOND, 0);
@@ -76,7 +73,7 @@ public class TrashCalendar {
         tempCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
         date = tempCalendar.getTime();
 
-        List<ITrash> iTrashes = new ArrayList<>();
+        List<ICalendarType> iCalendarTypes = new ArrayList<>();
         if (calendar != null) {
             for (Object o : calendar.getComponents("VEVENT")) {
                 VEvent vEvent = (VEvent) o;
@@ -86,47 +83,40 @@ public class TrashCalendar {
 
 
                 if ((dateEvent - dateToday >= 0) && dateEvent <= (dateToday + 108000000)) {
-                    iTrashes.add(ITrash.getTrash(vEvent));
+                    iCalendarTypes.add(ICalendarType.getCalendarTypeInstance(vEvent));
                 }
             }
         }
-
-        /* Temp solution todo */
-        /*
-        if (blueCalendar != null) {
-            for (Object o : blueCalendar.getComponents("VEVENT")) {
-                VEvent vEvent = (VEvent) o;
-
-                long dateToday = date.getTime();
-                long dateEvent = vEvent.getStartDate().getDate().getTime();
-
-
-                if ((dateEvent - dateToday >= 0) && dateEvent <= (dateToday + 108000000)) {
-                    iTrashes.add(ITrash.getTrash(vEvent));
-                }
-            }
-        }
-        */
-        return iTrashes;
+        return iCalendarTypes;
     }
 
     public void loadCalendar() {
-        this.calenderFile = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "EVSTrash.ics");
-        this.blueCalenderFile = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "BlaueTonne.ics");
-        Calendar blueCalendar = null;
-        if (this.calenderFile.exists()) {
-            try {
-                calendar = new CalendarBuilder().build(new FileInputStream(this.calenderFile));
-                blueCalendar = new CalendarBuilder().build(new FileInputStream(this.blueCalenderFile));
-                STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data loaded");
-            } catch (IOException | ParserException e) {
-                e.printStackTrace();
-            }
+        this.calendar = new Calendar();
+
+        /* Load calendar files */
+        File calendarDirectory = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "calendarFiles");
+        if (!calendarDirectory.exists()) {
+            calendarDirectory.mkdir();
         }
 
-        if (blueCalendar != null) {
-            for (Object o : blueCalendar.getComponents("VEVENT")) {
-                this.calendar.getComponents().add((VEvent) o);
+        File[] calendarDirectoryFiles = calendarDirectory.listFiles();
+
+        for (File file : calendarDirectoryFiles) {
+            if (file.isFile()) {
+                if (file.getName().toLowerCase().endsWith(".ics")) {
+                    Calendar tempCalendar = null;
+                    try {
+                        tempCalendar = new CalendarBuilder().build(new FileInputStream(file));
+                        STEMSystemApp.LOGGER.INFO(Color.GREEN + "New calender data added :: " + file.getName());
+                    } catch (IOException | ParserException e) {
+                        e.printStackTrace();
+                    }
+                    if (tempCalendar != null) {
+                        for (Object o : tempCalendar.getComponents("VEVENT")) {
+                            this.calendar.getComponents().add((VEvent) o);
+                        }
+                    }
+                }
             }
         }
     }

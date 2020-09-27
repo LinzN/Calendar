@@ -9,11 +9,14 @@
  *
  */
 
-package de.linzn.trashCalender.objects;
+package de.linzn.trashCalender.objects.trashes;
+
+import de.linzn.trashCalender.objects.ICalendarType;
+import de.linzn.trashCalender.objects.TrashType;
 
 import java.util.Date;
 
-public class GreenTrash implements ITrash {
+public class GreenTrash implements ICalendarType {
 
     private Date date;
 

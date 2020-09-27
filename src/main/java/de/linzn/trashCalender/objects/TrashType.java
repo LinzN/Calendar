@@ -12,5 +12,5 @@
 package de.linzn.trashCalender.objects;
 
 public enum TrashType {
-    BLUE, GREEN, BLACK, YELLOW;
+    BLUE, GREEN, BLACK, YELLOW, OTHER;
 }

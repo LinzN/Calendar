@@ -11,6 +11,10 @@
 
 package de.linzn.trashCalender.objects;
 
+import de.linzn.trashCalender.objects.trashes.BlackTrash;
+import de.linzn.trashCalender.objects.trashes.BlueTrash;
+import de.linzn.trashCalender.objects.trashes.GreenTrash;
+import de.linzn.trashCalender.objects.trashes.YellowTrash;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import java.text.Format;
@@ -18,11 +22,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-public interface ITrash {
+public interface ICalendarType {
 
-    static ITrash getTrash(VEvent vEvent) {
+    static ICalendarType getCalendarTypeInstance(VEvent vEvent) {
         String summary = vEvent.getSummary().getValue();
-        ITrash iTrash = null;
+        ICalendarType iTrash;
 
         if (summary.equalsIgnoreCase("Restabfalltonne")) {
             iTrash = new BlackTrash(vEvent.getStartDate().getDate());
@@ -32,6 +36,8 @@ public interface ITrash {
             iTrash = new GreenTrash(vEvent.getStartDate().getDate());
         } else if (summary.equalsIgnoreCase("Blaue Tonne")) {
             iTrash = new BlueTrash(vEvent.getStartDate().getDate());
+        } else {
+            iTrash = new OtherType(summary, vEvent.getStartDate().getDate());
         }
         return iTrash;
     }
