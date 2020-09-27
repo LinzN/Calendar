@@ -16,6 +16,7 @@ import de.linzn.calender.CalenderPlugin;
 import de.stem.stemSystem.AppLogger;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
+import de.stem.stemSystem.taskManagment.operations.AbstractOperation;
 import de.stem.stemSystem.taskManagment.operations.OperationOutput;
 import de.stem.stemSystem.utils.Color;
 
@@ -25,6 +26,16 @@ public class CalendarBuilderCallback extends AbstractCallback {
 
     @Override
     public void operation() {
+        AbstractOperation operation = new AbstractOperation() {
+            @Override
+            public OperationOutput runOperation() {
+                OperationOutput operationOutput = new OperationOutput(this);
+                operationOutput.setExit(0);
+                return operationOutput;
+            }
+        };
+
+        addOperationData(operation);
     }
 
     @Override
