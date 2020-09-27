@@ -9,17 +9,18 @@
  *
  */
 
-package de.linzn.trashCalender.objects;
+package de.linzn.calender.objects.trashes;
+
+import de.linzn.calender.objects.ICalendarType;
+import de.linzn.calender.objects.TrashType;
 
 import java.util.Date;
 
-public class OtherType implements ICalendarType {
+public class YellowTrash implements ICalendarType {
 
     private Date date;
-    private String summary;
 
-    public OtherType(String summary, Date date) {
-        this.summary = summary;
+    public YellowTrash(Date date) {
         this.date = date;
     }
 
@@ -30,11 +31,11 @@ public class OtherType implements ICalendarType {
 
     @Override
     public String getName() {
-        return summary;
+        return "Gelber Sack";
     }
 
     @Override
     public TrashType getType() {
-        return TrashType.OTHER;
+        return TrashType.YELLOW;
     }
 }

@@ -13,7 +13,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.stem.plugins</groupId>
-    <name>trash-calender</name>
+    <name>calender</name>
     <repositories>
         <repository>
             <id>enigmar-repo</id>
@@ -56,7 +56,7 @@
         </plugins>
     </build>
     <version>0.0.1</version>
-    <artifactId>trash-calender</artifactId>
+    <artifactId>calender</artifactId>
     <dependencies>
         <dependency>
             <groupId>de.stem</groupId>

@@ -9,10 +9,10 @@
  *
  */
 
-package de.linzn.trashCalender.callback;
+package de.linzn.calender.callback;
 
 
-import de.linzn.trashCalender.TrashCalenderPlugin;
+import de.linzn.calender.CalenderPlugin;
 import de.stem.stemSystem.AppLogger;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
@@ -27,7 +27,7 @@ public class EVSCallback extends AbstractCallback {
 
     @Override
     public void operation() {
-        File calendarDirectory = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
         if (!calendarDirectory.exists()) {
             calendarDirectory.mkdir();
         }
@@ -43,7 +43,6 @@ public class EVSCallback extends AbstractCallback {
     @Override
     public void callback(OperationOutput operationOutput) {
         AppLogger.debug(Color.GREEN + "EVS calender pull finish " + operationOutput.getExit());
-        TrashCalenderPlugin.trashCalenderPlugin.getTrashCalendar().loadCalendar();
     }
 
     @Override

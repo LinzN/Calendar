@@ -9,11 +9,11 @@
  *
  */
 
-package de.linzn.trashCalender;
+package de.linzn.calender;
 
 
-import de.linzn.trashCalender.objects.ICalendarType;
-import de.linzn.trashCalender.objects.TrashType;
+import de.linzn.calender.objects.ICalendarType;
+import de.linzn.calender.objects.TrashType;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.utils.Color;
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -28,10 +28,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class TrashCalendar {
+public class CalendarManager {
     private Calendar calendar;
 
-    public TrashCalendar() {
+    public CalendarManager() {
         this.loadCalendar();
     }
 
@@ -94,7 +94,7 @@ public class TrashCalendar {
         this.calendar = new Calendar();
 
         /* Load calendar files */
-        File calendarDirectory = new File(TrashCalenderPlugin.trashCalenderPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
         if (!calendarDirectory.exists()) {
             calendarDirectory.mkdir();
         }
@@ -107,7 +107,7 @@ public class TrashCalendar {
                     Calendar tempCalendar = null;
                     try {
                         tempCalendar = new CalendarBuilder().build(new FileInputStream(file));
-                        STEMSystemApp.LOGGER.INFO(Color.GREEN + "New calender data added :: " + file.getName());
+                        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
                         e.printStackTrace();
                     }

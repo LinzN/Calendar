@@ -1,4 +1,4 @@
-main: de.linzn.trashCalender.TrashCalenderPlugin
-name: trash-calender
+main: de.linzn.calender.CalenderPlugin
+name: calender
 version: ${project.version}
-depend: []
+depend: [ ]

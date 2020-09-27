@@ -9,10 +9,10 @@
  *
  */
 
-package de.linzn.trashCalender.objects.trashes;
+package de.linzn.calender.objects.trashes;
 
-import de.linzn.trashCalender.objects.ICalendarType;
-import de.linzn.trashCalender.objects.TrashType;
+import de.linzn.calender.objects.ICalendarType;
+import de.linzn.calender.objects.TrashType;
 
 import java.util.Date;
 
