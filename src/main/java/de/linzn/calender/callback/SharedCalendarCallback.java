@@ -55,7 +55,7 @@ public class SharedCalendarCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        STEMSystemApp.LOGGER.INFO(Color.GREEN + "Shared calender pull finish " + operationOutput.getExit());
+        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "Shared calender pull finish " + operationOutput.getExit());
     }
 
     @Override

@@ -109,6 +109,7 @@ public class CalendarManager {
                         tempCalendar = new CalendarBuilder().build(new FileInputStream(file));
                         STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
+                        STEMSystemApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
                         e.printStackTrace();
                     }
                     if (tempCalendar != null) {
