@@ -13,7 +13,7 @@ package de.linzn.calender.callback;
 
 
 import de.linzn.calender.CalenderPlugin;
-import de.stem.stemSystem.AppLogger;
+import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
 import de.stem.stemSystem.taskManagment.operations.OperationOutput;
@@ -55,7 +55,7 @@ public class SharedCalendarCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        AppLogger.debug(Color.GREEN + "Shared calender pull finish " + operationOutput.getExit());
+        STEMSystemApp.LOGGER.INFO(Color.GREEN + "Shared calender pull finish " + operationOutput.getExit());
     }
 
     @Override

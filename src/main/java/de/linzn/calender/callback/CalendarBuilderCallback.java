@@ -13,7 +13,7 @@ package de.linzn.calender.callback;
 
 
 import de.linzn.calender.CalenderPlugin;
-import de.stem.stemSystem.AppLogger;
+import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
 import de.stem.stemSystem.taskManagment.operations.AbstractOperation;
@@ -40,7 +40,7 @@ public class CalendarBuilderCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        AppLogger.debug(Color.GREEN + "Build calendar data  " + operationOutput.getExit());
+        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "Build calendar data  " + operationOutput.getExit());
         CalenderPlugin.calenderPlugin.getCalendarManager().loadCalendar();
     }
 
