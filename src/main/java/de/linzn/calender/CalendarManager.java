@@ -18,11 +18,12 @@ import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.utils.Color;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
+import net.fortuna.ical4j.data.UnfoldingReader;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -106,7 +107,7 @@ public class CalendarManager {
                 if (file.getName().toLowerCase().endsWith(".ics")) {
                     Calendar tempCalendar = null;
                     try {
-                        tempCalendar = new CalendarBuilder().build(new FileInputStream(file));
+                        tempCalendar = new CalendarBuilder().build(new UnfoldingReader(new FileReader(file)));
                         STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
                         STEMSystemApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
