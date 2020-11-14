@@ -92,7 +92,7 @@ public class CalendarManager {
     }
 
     public void loadCalendar() {
-        this.calendar = new Calendar();
+        Calendar calendar = new Calendar();
 
         /* Load calendar files */
         File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
@@ -115,11 +115,12 @@ public class CalendarManager {
                     }
                     if (tempCalendar != null) {
                         for (Object o : tempCalendar.getComponents("VEVENT")) {
-                            this.calendar.getComponents().add((VEvent) o);
+                            calendar.getComponents().add((VEvent) o);
                         }
                     }
                 }
             }
         }
+        this.calendar = calendar;
     }
 }
