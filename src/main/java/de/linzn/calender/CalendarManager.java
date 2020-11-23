@@ -21,6 +21,7 @@ import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.property.Clazz;
 
 import java.io.File;
 import java.io.FileReader;
@@ -115,7 +116,10 @@ public class CalendarManager {
                     }
                     if (tempCalendar != null) {
                         for (Object o : tempCalendar.getComponents("VEVENT")) {
-                            calendar.getComponents().add((VEvent) o);
+                            VEvent vevent = (VEvent) o;
+                            if (vevent.getClassification() != Clazz.PRIVATE) {
+                                calendar.getComponents().add(vevent);
+                            }
                         }
                     }
                 }
