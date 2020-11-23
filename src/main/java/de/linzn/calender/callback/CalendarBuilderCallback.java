@@ -43,9 +43,9 @@ public class CalendarBuilderCallback extends AbstractCallback {
         STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "Build calendar data  " + operationOutput.getExit());
         CalenderPlugin.calenderPlugin.getCalendarManager().loadCalendar();
     }
-
+    /* todo tempfix time sync problem with other thread*/
     @Override
     public CallbackTime getTime() {
-        return new CallbackTime(30, 30, TimeUnit.SECONDS);
+        return new CallbackTime(21, 30, TimeUnit.SECONDS);
     }
 }
