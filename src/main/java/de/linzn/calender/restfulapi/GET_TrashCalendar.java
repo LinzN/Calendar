@@ -14,15 +14,15 @@ package de.linzn.calender.restfulapi;
 import de.linzn.calender.CalenderPlugin;
 import de.linzn.calender.objects.ICalendarType;
 import de.linzn.calender.objects.TrashType;
-import de.linzn.restfulapi.api.jsonapi.get.IGetJSON;
+import de.linzn.restfulapi.api.jsonapi.IRequest;
+import de.linzn.restfulapi.api.jsonapi.RequestData;
 import org.json.JSONObject;
 
 import java.text.Format;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.Locale;
 
-public class GET_TrashCalendar implements IGetJSON {
+public class GET_TrashCalendar implements IRequest {
 
     private CalenderPlugin calenderPlugin;
 
@@ -31,7 +31,7 @@ public class GET_TrashCalendar implements IGetJSON {
     }
 
     @Override
-    public Object getRequestData(List<String> inputList) {
+    public Object proceedRequestData(RequestData requestData) {
         JSONObject jsonObject = new JSONObject();
         Format dateFormat = new SimpleDateFormat("EEEE d MMMMM yyyy", Locale.GERMANY);
 
@@ -68,8 +68,8 @@ public class GET_TrashCalendar implements IGetJSON {
     }
 
     @Override
-    public Object getGenericData() {
-        return getRequestData(null);
+    public Object genericData() {
+        return proceedRequestData(null);
     }
 
     @Override
