@@ -30,7 +30,7 @@ public interface ICalendarType {
 
         if (summary.equalsIgnoreCase("Restabfalltonne")) {
             iTrash = new BlackTrash(vEvent.getStartDate().getDate());
-        } else if (summary.equalsIgnoreCase("Gelber Sack")) {
+        } else if (summary.equalsIgnoreCase("Gelber Sack") || summary.equalsIgnoreCase("Gelbe Tonne/Gelber Sack") || summary.equalsIgnoreCase("Gelbe Tonne")) {
             iTrash = new YellowTrash(vEvent.getStartDate().getDate());
         } else if (summary.equalsIgnoreCase("Biotonne")) {
             iTrash = new GreenTrash(vEvent.getStartDate().getDate());
