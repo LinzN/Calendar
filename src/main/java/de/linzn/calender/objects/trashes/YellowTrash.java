@@ -31,7 +31,7 @@ public class YellowTrash implements ICalendarType {
 
     @Override
     public String getName() {
-        return "Gelber Sack";
+        return "Gelbe Tonne";
     }
 
     @Override
