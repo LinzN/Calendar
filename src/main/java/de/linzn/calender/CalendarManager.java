@@ -112,7 +112,7 @@ public class CalendarManager {
                         STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
                         STEMSystemApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
-                        e.printStackTrace();
+                        STEMSystemApp.LOGGER.ERROR(e);
                     }
                     if (tempCalendar != null) {
                         for (Object o : tempCalendar.getComponents("VEVENT")) {
