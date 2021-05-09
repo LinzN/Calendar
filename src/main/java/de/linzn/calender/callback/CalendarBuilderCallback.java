@@ -18,7 +18,6 @@ import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
 import de.stem.stemSystem.taskManagment.operations.AbstractOperation;
 import de.stem.stemSystem.taskManagment.operations.OperationOutput;
-import de.stem.stemSystem.utils.Color;
 
 import java.util.concurrent.TimeUnit;
 
@@ -40,7 +39,7 @@ public class CalendarBuilderCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "Build calendar data  " + operationOutput.getExit());
+        STEMSystemApp.LOGGER.DEBUG("Build calendar data  " + operationOutput.getExit());
         CalenderPlugin.calenderPlugin.getCalendarManager().loadCalendar();
     }
     /* todo tempfix time sync problem with other thread*/

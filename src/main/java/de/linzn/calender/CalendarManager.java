@@ -15,7 +15,6 @@ package de.linzn.calender;
 import de.linzn.calender.objects.ICalendarType;
 import de.linzn.calender.objects.TrashType;
 import de.stem.stemSystem.STEMSystemApp;
-import de.stem.stemSystem.utils.Color;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
@@ -109,7 +108,7 @@ public class CalendarManager {
                     Calendar tempCalendar = null;
                     try {
                         tempCalendar = new CalendarBuilder().build(new UnfoldingReader(new FileReader(file)));
-                        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "New calender data added :: " + file.getName());
+                        STEMSystemApp.LOGGER.DEBUG("New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
                         STEMSystemApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
                         STEMSystemApp.LOGGER.ERROR(e);

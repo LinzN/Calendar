@@ -18,7 +18,6 @@ import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
 import de.stem.stemSystem.taskManagment.operations.OperationOutput;
 import de.stem.stemSystem.taskManagment.operations.defaultOperations.ShellOperation;
-import de.stem.stemSystem.utils.Color;
 
 import java.io.File;
 import java.util.HashMap;
@@ -55,7 +54,7 @@ public class SharedCalendarCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        STEMSystemApp.LOGGER.DEBUG(Color.GREEN + "Shared calender pull finish " + operationOutput.getExit());
+        STEMSystemApp.LOGGER.DEBUG("Shared calender pull finish " + operationOutput.getExit());
     }
 
     @Override
