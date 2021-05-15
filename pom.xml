@@ -53,6 +53,25 @@
                     <finalName>${project.name}</finalName>
                 </configuration>
             </plugin>
+            <plugin>
+                <artifactId>maven-dependency-plugin</artifactId>
+
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+
+                        <configuration>
+                            <outputDirectory>target/export-lib</outputDirectory>
+                            <excludeScope>compile</excludeScope>
+                            <includeScope>provided</includeScope>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <version>0.0.1</version>
@@ -67,6 +86,13 @@
             <groupId>de.stem.plugins</groupId>
             <artifactId>restful-api</artifactId>
             <version>0.0.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mnode.ical4j</groupId>
+            <artifactId>ical4j</artifactId>
+            <version>1.0.2</version>
+            <scope>provided</scope>
+            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>
