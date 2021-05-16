@@ -66,8 +66,10 @@
 
                         <configuration>
                             <outputDirectory>target/export-lib</outputDirectory>
-                            <excludeScope>compile</excludeScope>
-                            <includeScope>provided</includeScope>
+                            <excludeGroupIds>de.linzn, de.stem, de.stem.plugins, org.yaml, org.json, org.eclipse,
+                                org.xerial, org.slf4j, com.google.*, com.google, org.codehaus.mojo,
+                                org.checkerframework, mysql
+                            </excludeGroupIds>
                         </configuration>
                     </execution>
                 </executions>
@@ -91,8 +93,6 @@
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
             <version>1.0.2</version>
-            <scope>provided</scope>
-            <type>jar</type>
         </dependency>
     </dependencies>
     <properties>
