@@ -92,6 +92,11 @@
             <version>0.0.1</version>
         </dependency>
         <dependency>
+            <groupId>de.stem.plugins</groupId>
+            <artifactId>web-api</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
             <version>1.0.2</version>

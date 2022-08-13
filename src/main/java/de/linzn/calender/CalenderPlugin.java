@@ -17,12 +17,15 @@ import de.linzn.calender.callback.EVSCallback;
 import de.linzn.calender.callback.SharedCalendarCallback;
 import de.linzn.calender.restfulapi.GET_Reminder;
 import de.linzn.calender.restfulapi.GET_TrashCalendar;
+import de.linzn.calender.webapi.WebApiHandler;
 import de.linzn.restfulapi.RestFulApiPlugin;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.modules.pluginModule.STEMPlugin;
 
 
 public class CalenderPlugin extends STEMPlugin {
+
+    private WebApiHandler webApiHandler;
 
     public static CalenderPlugin calenderPlugin;
     private CalendarManager calendarManager;
@@ -38,6 +41,7 @@ public class CalenderPlugin extends STEMPlugin {
         STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
         STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new SharedCalendarCallback(), this);
         this.calendarManager = new CalendarManager();
+        this.webApiHandler = new WebApiHandler(this);
         RestFulApiPlugin.restFulApiPlugin.registerIGetJSONClass(new GET_Reminder(this));
         RestFulApiPlugin.restFulApiPlugin.registerIGetJSONClass(new GET_TrashCalendar(this));
     }
