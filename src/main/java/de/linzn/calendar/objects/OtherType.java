@@ -9,7 +9,7 @@
  *
  */
 
-package de.linzn.calender.objects;
+package de.linzn.calendar.objects;
 
 import java.util.Date;
 

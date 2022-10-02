@@ -9,10 +9,10 @@
  *
  */
 
-package de.linzn.calender.callback;
+package de.linzn.calendar.callback;
 
 
-import de.linzn.calender.CalenderPlugin;
+import de.linzn.calendar.CalendarPlugin;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
@@ -40,7 +40,7 @@ public class CalendarBuilderCallback extends AbstractCallback {
     @Override
     public void callback(OperationOutput operationOutput) {
         STEMSystemApp.LOGGER.DEBUG("Build calendar data  " + operationOutput.getExit());
-        CalenderPlugin.calenderPlugin.getCalendarManager().loadCalendar();
+        CalendarPlugin.calendarPlugin.getCalendarManager().loadCalendar();
     }
     /* todo tempfix time sync problem with other thread*/
     @Override

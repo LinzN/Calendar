@@ -9,29 +9,29 @@
  *
  */
 
-package de.linzn.calender;
+package de.linzn.calendar;
 
 
-import de.linzn.calender.callback.CalendarBuilderCallback;
-import de.linzn.calender.callback.EVSCallback;
-import de.linzn.calender.callback.SharedCalendarCallback;
-import de.linzn.calender.restfulapi.GET_Reminder;
-import de.linzn.calender.restfulapi.GET_TrashCalendar;
-import de.linzn.calender.webapi.WebApiHandler;
+import de.linzn.calendar.callback.CalendarBuilderCallback;
+import de.linzn.calendar.callback.EVSCallback;
+import de.linzn.calendar.callback.SharedCalendarCallback;
+import de.linzn.calendar.restfulapi.GET_Reminder;
+import de.linzn.calendar.restfulapi.GET_TrashCalendar;
+import de.linzn.calendar.webapi.WebApiHandler;
 import de.linzn.restfulapi.RestFulApiPlugin;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.modules.pluginModule.STEMPlugin;
 
 
-public class CalenderPlugin extends STEMPlugin {
+public class CalendarPlugin extends STEMPlugin {
 
     private WebApiHandler webApiHandler;
 
-    public static CalenderPlugin calenderPlugin;
+    public static CalendarPlugin calendarPlugin;
     private CalendarManager calendarManager;
 
-    public CalenderPlugin() {
-        calenderPlugin = this;
+    public CalendarPlugin() {
+        calendarPlugin = this;
     }
 
     @Override

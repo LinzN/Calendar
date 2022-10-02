@@ -1,44 +1,34 @@
-/*
- * Copyright (C) 2020. Niklas Linz - All Rights Reserved
- * You may use, distribute and modify this code under the
- * terms of the LGPLv3 license, which unfortunately won't be
- * written for another century.
- *
- * You should have received a copy of the LGPLv3 license with
- * this file. If not, please write to: niklas.linz@enigmar.de
- *
- */
+package de.linzn.calendar.webapi;
 
-package de.linzn.calender.restfulapi;
-
-import de.linzn.calender.CalenderPlugin;
-import de.linzn.calender.objects.ICalendarType;
-import de.linzn.calender.objects.TrashType;
-import de.linzn.restfulapi.api.jsonapi.IRequest;
-import de.linzn.restfulapi.api.jsonapi.RequestData;
+import com.sun.net.httpserver.HttpExchange;
+import de.linzn.calendar.CalendarPlugin;
+import de.linzn.calendar.objects.ICalendarType;
+import de.linzn.calendar.objects.TrashType;
+import de.linzn.webapi.core.HttpRequestClientPayload;
+import de.linzn.webapi.modules.RequestInterface;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public class GET_TrashCalendar implements IRequest {
+public class TrashWebApi extends RequestInterface {
+    private CalendarPlugin calendarPlugin;
 
-    private CalenderPlugin calenderPlugin;
-
-    public GET_TrashCalendar(CalenderPlugin calenderPlugin) {
-        this.calenderPlugin = calenderPlugin;
+    public TrashWebApi(CalendarPlugin calendarPlugin) {
+        this.calendarPlugin = calendarPlugin;
     }
 
     @Override
-    public Object proceedRequestData(RequestData requestData) {
+    public Object callHttpEvent(HttpExchange httpExchange, HttpRequestClientPayload httpRequestClientPayload) throws IOException {
         JSONObject jsonObject = new JSONObject();
         Format dateFormat = new SimpleDateFormat("EEEE d MMMMM yyyy", Locale.GERMANY);
 
-        ICalendarType blackTrash = this.calenderPlugin.getCalendarManager().getNextTrash(TrashType.BLACK);
-        ICalendarType greenTrash = this.calenderPlugin.getCalendarManager().getNextTrash(TrashType.GREEN);
-        ICalendarType yellowTrash = this.calenderPlugin.getCalendarManager().getNextTrash(TrashType.YELLOW);
-        ICalendarType blueTrash = this.calenderPlugin.getCalendarManager().getNextTrash(TrashType.BLUE);
+        ICalendarType blackTrash = this.calendarPlugin.getCalendarManager().getNextTrash(TrashType.BLACK);
+        ICalendarType greenTrash = this.calendarPlugin.getCalendarManager().getNextTrash(TrashType.GREEN);
+        ICalendarType yellowTrash = this.calendarPlugin.getCalendarManager().getNextTrash(TrashType.YELLOW);
+        ICalendarType blueTrash = this.calendarPlugin.getCalendarManager().getNextTrash(TrashType.BLUE);
 
         if (blackTrash != null) {
             JSONObject blackTrashJson = new JSONObject();
@@ -69,15 +59,5 @@ public class GET_TrashCalendar implements IRequest {
             jsonObject.put(blueTrash.getType().name(), blueTrashJson);
         }
         return jsonObject;
-    }
-
-    @Override
-    public Object genericData() {
-        return proceedRequestData(null);
-    }
-
-    @Override
-    public String name() {
-        return "trash-calendar";
     }
 }

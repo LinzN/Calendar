@@ -9,12 +9,12 @@
  *
  */
 
-package de.linzn.calender.objects;
+package de.linzn.calendar.objects;
 
-import de.linzn.calender.objects.trashes.BlackTrash;
-import de.linzn.calender.objects.trashes.BlueTrash;
-import de.linzn.calender.objects.trashes.GreenTrash;
-import de.linzn.calender.objects.trashes.YellowTrash;
+import de.linzn.calendar.objects.trashes.BlackTrash;
+import de.linzn.calendar.objects.trashes.BlueTrash;
+import de.linzn.calendar.objects.trashes.GreenTrash;
+import de.linzn.calendar.objects.trashes.YellowTrash;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import java.text.Format;

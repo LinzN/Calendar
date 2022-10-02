@@ -9,11 +9,11 @@
  *
  */
 
-package de.linzn.calender.restfulapi;
+package de.linzn.calendar.restfulapi;
 
-import de.linzn.calender.CalenderPlugin;
-import de.linzn.calender.objects.ICalendarType;
-import de.linzn.calender.objects.TrashType;
+import de.linzn.calendar.CalendarPlugin;
+import de.linzn.calendar.objects.ICalendarType;
+import de.linzn.calendar.objects.TrashType;
 import de.linzn.restfulapi.api.jsonapi.IRequest;
 import de.linzn.restfulapi.api.jsonapi.RequestData;
 import org.json.JSONArray;
@@ -27,17 +27,17 @@ import java.util.Locale;
 
 public class GET_Reminder implements IRequest {
 
-    private CalenderPlugin calenderPlugin;
+    private CalendarPlugin calendarPlugin;
 
-    public GET_Reminder(CalenderPlugin calenderPlugin) {
-        this.calenderPlugin = calenderPlugin;
+    public GET_Reminder(CalendarPlugin calendarPlugin) {
+        this.calendarPlugin = calendarPlugin;
     }
 
     @Override
     public Object proceedRequestData(RequestData requestData) {
         JSONArray jsonArray = new JSONArray();
 
-        List<ICalendarType> iCalendarTypes = this.calenderPlugin.getCalendarManager().getCalenderEntriesList(new Date());
+        List<ICalendarType> iCalendarTypes = this.calendarPlugin.getCalendarManager().getCalenderEntriesList(new Date());
 
         for (ICalendarType iCalendarType : iCalendarTypes) {
             Format dateFormat = new SimpleDateFormat("EEEE d MMMMM yyyy", Locale.GERMANY);

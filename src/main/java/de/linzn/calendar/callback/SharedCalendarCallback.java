@@ -9,10 +9,10 @@
  *
  */
 
-package de.linzn.calender.callback;
+package de.linzn.calendar.callback;
 
 
-import de.linzn.calender.CalenderPlugin;
+import de.linzn.calendar.CalendarPlugin;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
@@ -27,7 +27,7 @@ public class SharedCalendarCallback extends AbstractCallback {
 
     @Override
     public void operation() {
-        File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
         if (!calendarDirectory.exists()) {
             calendarDirectory.mkdir();
         }
@@ -38,11 +38,11 @@ public class SharedCalendarCallback extends AbstractCallback {
             }
         }
 
-        HashMap<String, Object> sharedCalendars = (HashMap<String, Object>) CalenderPlugin.calenderPlugin.getDefaultConfig().get("sharedCalendars");
+        HashMap<String, Object> sharedCalendars = (HashMap<String, Object>) CalendarPlugin.calendarPlugin.getDefaultConfig().get("sharedCalendars");
 
 
         for (String key : sharedCalendars.keySet()) {
-            String link = CalenderPlugin.calenderPlugin.getDefaultConfig().getString("sharedCalendars." + key + ".link");
+            String link = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("sharedCalendars." + key + ".link");
             String command = "curl " + link + " --output " + new File(calendarDirectory, "shared_" + key + ".ics").getAbsolutePath();
             ShellOperation shellOperation = new ShellOperation();
             shellOperation.setUseSSH(false);

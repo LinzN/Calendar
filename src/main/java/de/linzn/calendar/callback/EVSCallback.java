@@ -9,10 +9,10 @@
  *
  */
 
-package de.linzn.calender.callback;
+package de.linzn.calendar.callback;
 
 
-import de.linzn.calender.CalenderPlugin;
+import de.linzn.calendar.CalendarPlugin;
 import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
@@ -26,12 +26,12 @@ public class EVSCallback extends AbstractCallback {
 
     @Override
     public void operation() {
-        File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
         if (!calendarDirectory.exists()) {
             calendarDirectory.mkdir();
         }
 
-        String mmseData = CalenderPlugin.calenderPlugin.getDefaultConfig().getString("trash.mmse_data");
+        String mmseData = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("trash.mmse_data");
         File file = new File(calendarDirectory, "EVSTrash.ics");
         if (file.exists()) {
             file.delete();

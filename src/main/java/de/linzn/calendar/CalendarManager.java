@@ -9,11 +9,11 @@
  *
  */
 
-package de.linzn.calender;
+package de.linzn.calendar;
 
 
-import de.linzn.calender.objects.ICalendarType;
-import de.linzn.calender.objects.TrashType;
+import de.linzn.calendar.objects.ICalendarType;
+import de.linzn.calendar.objects.TrashType;
 import de.stem.stemSystem.STEMSystemApp;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
@@ -95,7 +95,7 @@ public class CalendarManager {
         Calendar calendar = new Calendar();
 
         /* Load calendar files */
-        File calendarDirectory = new File(CalenderPlugin.calenderPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
         if (!calendarDirectory.exists()) {
             calendarDirectory.mkdir();
         }
