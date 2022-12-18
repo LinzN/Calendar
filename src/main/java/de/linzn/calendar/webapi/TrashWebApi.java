@@ -36,13 +36,28 @@ public class TrashWebApi extends RequestInterface {
             blackTrashJson.put("date", dateFormat.format(blackTrash.getDate()));
             blackTrashJson.put("type", blackTrash.getType().name());
             jsonObject.put(blackTrash.getType().name(), blackTrashJson);
+        } else {
+            ICalendarType dummyTrash = ICalendarType.getDummyType(TrashType.BLACK);
+            JSONObject blackTrashJson = new JSONObject();
+            blackTrashJson.put("name", dummyTrash.getName());
+            blackTrashJson.put("date", "No date yet");
+            blackTrashJson.put("type", dummyTrash.getType().name());
+            jsonObject.put(dummyTrash.getType().name(), blackTrashJson);
         }
+
         if (greenTrash != null) {
             JSONObject greenTrashJson = new JSONObject();
             greenTrashJson.put("name", greenTrash.getName());
             greenTrashJson.put("date", dateFormat.format(greenTrash.getDate()));
             greenTrashJson.put("type", greenTrash.getType().name());
             jsonObject.put(greenTrash.getType().name(), greenTrashJson);
+        } else {
+            ICalendarType dummyTrash = ICalendarType.getDummyType(TrashType.GREEN);
+            JSONObject greenTrashJson = new JSONObject();
+            greenTrashJson.put("name", dummyTrash.getName());
+            greenTrashJson.put("date", "No date yet");
+            greenTrashJson.put("type", dummyTrash.getType().name());
+            jsonObject.put(dummyTrash.getType().name(), greenTrashJson);
         }
         if (yellowTrash != null) {
             JSONObject yellowTrashJson = new JSONObject();
@@ -50,6 +65,13 @@ public class TrashWebApi extends RequestInterface {
             yellowTrashJson.put("date", dateFormat.format(yellowTrash.getDate()));
             yellowTrashJson.put("type", yellowTrash.getType().name());
             jsonObject.put(yellowTrash.getType().name(), yellowTrashJson);
+        } else {
+            ICalendarType dummyTrash = ICalendarType.getDummyType(TrashType.YELLOW);
+            JSONObject yellowTrashJson = new JSONObject();
+            yellowTrashJson.put("name", dummyTrash.getName());
+            yellowTrashJson.put("date", "No date yet");
+            yellowTrashJson.put("type", dummyTrash.getType().name());
+            jsonObject.put(dummyTrash.getType().name(), yellowTrashJson);
         }
         if (blueTrash != null) {
             JSONObject blueTrashJson = new JSONObject();
@@ -57,6 +79,13 @@ public class TrashWebApi extends RequestInterface {
             blueTrashJson.put("date", dateFormat.format(blueTrash.getDate()));
             blueTrashJson.put("type", blueTrash.getType().name());
             jsonObject.put(blueTrash.getType().name(), blueTrashJson);
+        } else {
+            ICalendarType dummyTrash = ICalendarType.getDummyType(TrashType.BLUE);
+            JSONObject blueTrashJson = new JSONObject();
+            blueTrashJson.put("name", dummyTrash.getName());
+            blueTrashJson.put("date", "No date yet");
+            blueTrashJson.put("type", dummyTrash.getType().name());
+            jsonObject.put(dummyTrash.getType().name(), blueTrashJson);
         }
         return jsonObject;
     }

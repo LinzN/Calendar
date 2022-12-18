@@ -53,4 +53,20 @@ public interface ICalendarType {
     String getName();
 
     TrashType getType();
+
+    static ICalendarType getDummyType(TrashType type) {
+        ICalendarType dummy;
+        if (type == TrashType.BLACK) {
+            dummy = new BlackTrash(null);
+        } else if (type == TrashType.BLUE) {
+            dummy = new BlueTrash(null);
+        } else if (type == TrashType.YELLOW) {
+            dummy = new YellowTrash(null);
+        } else if (type == TrashType.GREEN) {
+            dummy = new GreenTrash(null);
+        } else {
+            dummy = new OtherType("Other", null);
+        }
+        return dummy;
+    }
 }
