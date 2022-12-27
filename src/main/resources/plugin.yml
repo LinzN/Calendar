@@ -2,3 +2,5 @@ main: de.linzn.calendar.CalendarPlugin
 name: calendar
 version: ${project.version}
 depend: [ restful-api, web-api ]
+buildJobName: ${buildServer.jobName}
+buildNumber: ${buildServer.buildNumber}
