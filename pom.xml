@@ -49,13 +49,6 @@
                 <configuration>
                     <archive>
                         <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifest>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                        </manifest>
-                        <manifestEntries>
-                            <BuildServer-JobName>${buildServer.jobName}</BuildServer-JobName>
-                            <BuildServer-BuildNumber>${buildServer.buildNumber}</BuildServer-BuildNumber>
-                        </manifestEntries>
                     </archive>
                     <finalName>${project.name}</finalName>
                 </configuration>
@@ -111,7 +104,5 @@
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <buildServer.jobName>CUSTOM</buildServer.jobName>
-        <buildServer.buildNumber>SNAPSHOT</buildServer.buildNumber>
     </properties>
 </project>
