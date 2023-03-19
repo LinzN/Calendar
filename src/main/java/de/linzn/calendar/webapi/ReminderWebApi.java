@@ -4,8 +4,10 @@ import com.sun.net.httpserver.HttpExchange;
 import de.linzn.calendar.CalendarPlugin;
 import de.linzn.calendar.objects.ICalendarType;
 import de.linzn.calendar.objects.TrashType;
+import de.linzn.webapi.core.ApiResponse;
 import de.linzn.webapi.core.HttpRequestClientPayload;
 import de.linzn.webapi.modules.RequestInterface;
+import org.checkerframework.checker.units.qual.A;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -26,6 +28,8 @@ public class ReminderWebApi extends RequestInterface {
 
     @Override
     public Object callHttpEvent(HttpExchange httpExchange, HttpRequestClientPayload httpRequestClientPayload) throws IOException {
+        ApiResponse apiResponse = new ApiResponse();
+
         JSONArray jsonArray = new JSONArray();
 
         List<ICalendarType> iCalendarTypes = this.calendarPlugin.getCalendarManager().getCalenderEntriesList(new Date());
@@ -46,6 +50,8 @@ public class ReminderWebApi extends RequestInterface {
             jsonObject.put("type", iCalendarType.getType().name());
             jsonArray.put(jsonObject);
         }
-        return jsonArray;
+
+        apiResponse.getJSONObject().put("entries", jsonArray);
+        return apiResponse.buildResponse();
     }
 }
