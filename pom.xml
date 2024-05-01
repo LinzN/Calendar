@@ -65,13 +65,8 @@
                         </goals>
 
                         <configuration>
-                            <outputDirectory>target/export-lib</outputDirectory>
-                            <excludeGroupIds>de.stem, de.stem.plugins, org.yaml, org.json, org.eclipse,
-                                org.xerial, org.slf4j, com.google.*, com.google, org.codehaus.mojo,
-                                org.checkerframework, mysql
-                            </excludeGroupIds>
-                            <excludeArtifactIds>openJL, simplyDatabase, simplyLogger, simplyConfiguration, stemLink
-                            </excludeArtifactIds>
+                            <outputDirectory>target/libraries</outputDirectory>
+                            <excludeScope>provided</excludeScope>
                         </configuration>
                     </execution>
                 </executions>
@@ -85,21 +80,25 @@
             <groupId>de.stem</groupId>
             <artifactId>stem-system</artifactId>
             <version>1.0.1-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.stem.plugins</groupId>
             <artifactId>restful-api</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>de.stem.plugins</groupId>
             <artifactId>web-api</artifactId>
             <version>1.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.mnode.ical4j</groupId>
             <artifactId>ical4j</artifactId>
-            <version>1.0.2</version>
+            <version>3.2.18</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
     <properties>
