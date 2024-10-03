@@ -17,10 +17,11 @@ import de.stem.stemSystem.STEMSystemApp;
 import de.stem.stemSystem.taskManagment.AbstractCallback;
 import de.stem.stemSystem.taskManagment.CallbackTime;
 import de.stem.stemSystem.taskManagment.operations.OperationOutput;
-import de.stem.stemSystem.taskManagment.operations.defaultOperations.ShellOperation;
+import de.stem.stemSystem.taskManagment.operations.defaultOperations.ScriptOperation;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileReader;
@@ -37,26 +38,37 @@ public class EVSCallback extends AbstractCallback {
         }
 
         String mmseData = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("trash.mmse_data");
-        File file = new File(calendarDirectory, "EVSTrash-temp.ics");
+        String proxy = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("general.proxy_server");
+        boolean useProxy = CalendarPlugin.calendarPlugin.getDefaultConfig().getBoolean("general.use_proxy", false);
+        File file = new File(calendarDirectory, "_online_evs.temp");
         if (file.exists()) {
             file.delete();
         }
-        String command = "curl 'https://www.muellmax.de/abfallkalender/evs/res/EvsStart.php' -H 'authority: www.muellmax.de' -H 'cache-control: max-age=0' -H 'origin: https://www.muellmax.de' -H 'upgrade-insecure-requests: 1' -H 'content-type: application/x-www-form-urlencoded' -H 'user-agent: Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Mobile Safari/537.36' -H 'sec-fetch-user: ?1' -H 'accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9' -H 'sec-fetch-site: same-origin' -H 'sec-fetch-mode: nested-navigate' -H 'referer: https://www.muellmax.de/abfallkalender/evs/res/EvsStart.php' -H 'accept-encoding: gzip, deflate, br' -H 'accept-language: de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7' --data 'mm_ses=" + mmseData + "&xxx=1&mm_frm_type=termine&mm_frm_fra_RM=RM&mm_frm_fra_BIO=BIO&mm_frm_fra_GT=GT&mm_ica_gen=iCalendar-Datei+laden' --compressed > " + file.getAbsolutePath();
-        ShellOperation shellOperation = new ShellOperation();
-        shellOperation.setUseSSH(false);
-        shellOperation.setScriptCommand(command);
-        shellOperation.setUseOutput(false);
-        addOperationData(shellOperation);
+
+
+        ScriptOperation scriptOperation = new ScriptOperation("get_evs-data");
+        scriptOperation.addParameter("scriptdestination", calendarDirectory.getAbsolutePath());
+        scriptOperation.addParameter("outfile", file.getAbsolutePath());
+        addOperationData(scriptOperation);
     }
 
     @Override
     public void callback(OperationOutput operationOutput) {
+        JSONObject jsonObject = (JSONObject) operationOutput.getData();
+        if (operationOutput.getExit() != 0) {
+            for (Object line : jsonObject.getJSONArray("outputLines")) {
+                STEMSystemApp.LOGGER.WARNING(line);
+            }
+            for (Object line : jsonObject.getJSONArray("errorLines")) {
+                STEMSystemApp.LOGGER.WARNING(line);
+            }
+        }
         File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
-        File tempFile = new File(calendarDirectory, "EVSTrash-temp.ics");
+        File tempFile = new File(calendarDirectory, "_online_evs.temp");
 
         try {
             new CalendarBuilder().build(new UnfoldingReader(new FileReader(tempFile)));
-            File file = new File(calendarDirectory, "EVSTrash.ics");
+            File file = new File(calendarDirectory, "online_evs.ics");
             if (file.exists()) {
                 file.delete();
             }
