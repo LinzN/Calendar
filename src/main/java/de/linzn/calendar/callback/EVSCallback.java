@@ -86,6 +86,7 @@ public class EVSCallback extends AbstractCallback {
 
     @Override
     public CallbackTime getTime() {
-        return new CallbackTime(1, 480, TimeUnit.MINUTES);
+        //return new CallbackTime(1, 480, TimeUnit.MINUTES);
+        return new CallbackTime(0, 4, 0, true);
     }
 }
