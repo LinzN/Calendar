@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2020. Niklas Linz - All Rights Reserved
- * You may use, distribute and modify this code under the
- * terms of the LGPLv3 license, which unfortunately won't be
- * written for another century.
+ * Copyright (c) 2025 MirraNET, Niklas Linz. All rights reserved.
  *
- * You should have received a copy of the LGPLv3 license with
- * this file. If not, please write to: niklas.linz@enigmar.de
+ * This file is part of the MirraNET project and is licensed under the
+ * GNU Lesser General Public License v3.0 (LGPLv3).
  *
+ * You may use, distribute and modify this code under the terms
+ * of the LGPLv3 license. You should have received a copy of the
+ * license along with this file. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>
+ * or contact: niklas.linz@mirranet.de
  */
 
 package de.linzn.calendar;
@@ -14,7 +15,7 @@ package de.linzn.calendar;
 
 import de.linzn.calendar.objects.ICalendarType;
 import de.linzn.calendar.objects.TrashType;
-import de.stem.stemSystem.STEMSystemApp;
+import de.linzn.stem.STEMApp;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
@@ -108,10 +109,10 @@ public class CalendarManager {
                     Calendar tempCalendar = null;
                     try {
                         tempCalendar = new CalendarBuilder().build(new UnfoldingReader(new FileReader(file)));
-                        STEMSystemApp.LOGGER.DEBUG("New calender data added :: " + file.getName());
+                        STEMApp.LOGGER.DEBUG("New calender data added :: " + file.getName());
                     } catch (IOException | ParserException e) {
-                        STEMSystemApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
-                        STEMSystemApp.LOGGER.ERROR(e);
+                        STEMApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
+                        STEMApp.LOGGER.ERROR(e);
                     }
                     if (tempCalendar != null) {
                         for (Object o : tempCalendar.getComponents("VEVENT")) {

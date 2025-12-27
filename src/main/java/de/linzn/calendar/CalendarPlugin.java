@@ -1,12 +1,13 @@
 /*
- * Copyright (C) 2020. Niklas Linz - All Rights Reserved
- * You may use, distribute and modify this code under the
- * terms of the LGPLv3 license, which unfortunately won't be
- * written for another century.
+ * Copyright (c) 2025 MirraNET, Niklas Linz. All rights reserved.
  *
- * You should have received a copy of the LGPLv3 license with
- * this file. If not, please write to: niklas.linz@enigmar.de
+ * This file is part of the MirraNET project and is licensed under the
+ * GNU Lesser General Public License v3.0 (LGPLv3).
  *
+ * You may use, distribute and modify this code under the terms
+ * of the LGPLv3 license. You should have received a copy of the
+ * license along with this file. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>
+ * or contact: niklas.linz@mirranet.de
  */
 
 package de.linzn.calendar;
@@ -15,19 +16,15 @@ package de.linzn.calendar;
 import de.linzn.calendar.callback.CalendarBuilderCallback;
 import de.linzn.calendar.callback.EVSCallback;
 import de.linzn.calendar.callback.SharedCalendarCallback;
-import de.linzn.calendar.restfulapi.GET_Reminder;
-import de.linzn.calendar.restfulapi.GET_TrashCalendar;
 import de.linzn.calendar.webapi.WebApiHandler;
-import de.linzn.restfulapi.RestFulApiPlugin;
-import de.stem.stemSystem.STEMSystemApp;
-import de.stem.stemSystem.modules.pluginModule.STEMPlugin;
+import de.linzn.stem.STEMApp;
+import de.linzn.stem.modules.pluginModule.STEMPlugin;
 
 
 public class CalendarPlugin extends STEMPlugin {
 
-    private WebApiHandler webApiHandler;
-
     public static CalendarPlugin calendarPlugin;
+    private WebApiHandler webApiHandler;
     private CalendarManager calendarManager;
 
     public CalendarPlugin() {
@@ -37,13 +34,11 @@ public class CalendarPlugin extends STEMPlugin {
     @Override
     public void onEnable() {
         this.getDefaultConfig().save();
-        STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new CalendarBuilderCallback(), this);
-        STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
-        STEMSystemApp.getInstance().getCallBackService().registerCallbackListener(new SharedCalendarCallback(), this);
+        STEMApp.getInstance().getCallBackService().registerCallbackListener(new CalendarBuilderCallback(), this);
+        STEMApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
+        STEMApp.getInstance().getCallBackService().registerCallbackListener(new SharedCalendarCallback(), this);
         this.calendarManager = new CalendarManager();
         this.webApiHandler = new WebApiHandler(this);
-        RestFulApiPlugin.restFulApiPlugin.registerIGetJSONClass(new GET_Reminder(this));
-        RestFulApiPlugin.restFulApiPlugin.registerIGetJSONClass(new GET_TrashCalendar(this));
     }
 
     @Override

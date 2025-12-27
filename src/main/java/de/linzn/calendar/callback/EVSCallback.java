@@ -1,23 +1,24 @@
 /*
- * Copyright (C) 2020. Niklas Linz - All Rights Reserved
- * You may use, distribute and modify this code under the
- * terms of the LGPLv3 license, which unfortunately won't be
- * written for another century.
+ * Copyright (c) 2025 MirraNET, Niklas Linz. All rights reserved.
  *
- * You should have received a copy of the LGPLv3 license with
- * this file. If not, please write to: niklas.linz@enigmar.de
+ * This file is part of the MirraNET project and is licensed under the
+ * GNU Lesser General Public License v3.0 (LGPLv3).
  *
+ * You may use, distribute and modify this code under the terms
+ * of the LGPLv3 license. You should have received a copy of the
+ * license along with this file. If not, see <https://www.gnu.org/licenses/lgpl-3.0.html>
+ * or contact: niklas.linz@mirranet.de
  */
 
 package de.linzn.calendar.callback;
 
 
 import de.linzn.calendar.CalendarPlugin;
-import de.stem.stemSystem.STEMSystemApp;
-import de.stem.stemSystem.taskManagment.AbstractCallback;
-import de.stem.stemSystem.taskManagment.CallbackTime;
-import de.stem.stemSystem.taskManagment.operations.OperationOutput;
-import de.stem.stemSystem.taskManagment.operations.defaultOperations.ScriptOperation;
+import de.linzn.stem.STEMApp;
+import de.linzn.stem.taskManagment.AbstractCallback;
+import de.linzn.stem.taskManagment.CallbackTime;
+import de.linzn.stem.taskManagment.operations.OperationOutput;
+import de.linzn.stem.taskManagment.operations.defaultOperations.ScriptOperation;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
@@ -56,10 +57,10 @@ public class EVSCallback extends AbstractCallback {
         JSONObject jsonObject = (JSONObject) operationOutput.getData();
         if (operationOutput.getExit() != 0) {
             for (Object line : jsonObject.getJSONArray("outputLines")) {
-                STEMSystemApp.LOGGER.WARNING(line);
+                STEMApp.LOGGER.WARNING(line);
             }
             for (Object line : jsonObject.getJSONArray("errorLines")) {
-                STEMSystemApp.LOGGER.WARNING(line);
+                STEMApp.LOGGER.WARNING(line);
             }
         }
         File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
@@ -73,14 +74,14 @@ public class EVSCallback extends AbstractCallback {
             }
             tempFile.renameTo(file);
         } catch (IOException | ParserException e) {
-            STEMSystemApp.LOGGER.WARNING("Error in new EVS file. Skipping!");
+            STEMApp.LOGGER.WARNING("Error in new EVS file. Skipping!");
             if (tempFile.exists()) {
                 tempFile.delete();
             }
         }
 
 
-        STEMSystemApp.LOGGER.DEBUG("EVS calender pull finish " + operationOutput.getExit());
+        STEMApp.LOGGER.DEBUG("EVS calender pull finish " + operationOutput.getExit());
     }
 
     @Override
