@@ -12,9 +12,7 @@
 
 package de.linzn.calendar.callback;
 
-
 import de.linzn.calendar.CalendarPlugin;
-import de.linzn.stem.STEMApp;
 import de.linzn.stem.taskManagment.AbstractCallback;
 import de.linzn.stem.taskManagment.CallbackTime;
 import de.linzn.stem.taskManagment.operations.AbstractOperation;
@@ -22,29 +20,28 @@ import de.linzn.stem.taskManagment.operations.OperationOutput;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Checks the calendar files every 30 seconds and reloads them when they changed.
+ */
 public class CalendarBuilderCallback extends AbstractCallback {
 
     @Override
     public void operation() {
-        AbstractOperation operation = new AbstractOperation() {
+        addOperationData(new AbstractOperation() {
             @Override
             public OperationOutput runOperation() {
                 OperationOutput operationOutput = new OperationOutput(this);
+                CalendarPlugin.calendarPlugin.getCalendarManager().loadCalendar();
                 operationOutput.setExit(0);
                 return operationOutput;
             }
-        };
-
-        addOperationData(operation);
+        });
     }
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        STEMApp.LOGGER.DEBUG("Build calendar data  " + operationOutput.getExit());
-        CalendarPlugin.calendarPlugin.getCalendarManager().loadCalendar();
     }
 
-    /* todo tempfix time sync problem with other thread*/
     @Override
     public CallbackTime getTime() {
         return new CallbackTime(21, 30, TimeUnit.SECONDS);

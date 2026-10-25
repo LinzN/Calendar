@@ -26,7 +26,7 @@ import java.util.Locale;
 public interface ICalendarType {
 
     static ICalendarType getCalendarTypeInstance(VEvent vEvent) {
-        String summary = vEvent.getSummary().getValue();
+        String summary = vEvent.getSummary() == null || vEvent.getSummary().getValue() == null ? "" : vEvent.getSummary().getValue().trim();
         ICalendarType iTrash;
 
         if (summary.equalsIgnoreCase("Restabfalltonne")) {
@@ -62,7 +62,7 @@ public interface ICalendarType {
     default String getDayName() {
         Format dateFormat = new SimpleDateFormat("EEEE", Locale.GERMANY);
         Date date = getDate();
-        return dateFormat.format(date);
+        return date == null ? "" : dateFormat.format(date);
     }
 
     Date getDate();

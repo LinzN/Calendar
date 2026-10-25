@@ -12,14 +12,12 @@
 
 package de.linzn.calendar;
 
-
 import de.linzn.calendar.callback.CalendarBuilderCallback;
 import de.linzn.calendar.callback.EVSCallback;
 import de.linzn.calendar.callback.SharedCalendarCallback;
 import de.linzn.calendar.webapi.WebApiHandler;
-import de.linzn.stem.STEMApp;
+import de.linzn.stem.api.scheduler.TaskScheduler;
 import de.linzn.stem.modules.pluginModule.STEMPlugin;
-
 
 public class CalendarPlugin extends STEMPlugin {
 
@@ -33,18 +31,22 @@ public class CalendarPlugin extends STEMPlugin {
 
     @Override
     public void onEnable() {
+        this.getDefaultConfig().getInt("general.shared_refresh_minutes", 15);
         this.getDefaultConfig().save();
-        STEMApp.getInstance().getCallBackService().registerCallbackListener(new CalendarBuilderCallback(), this);
-        STEMApp.getInstance().getCallBackService().registerCallbackListener(new EVSCallback(), this);
-        STEMApp.getInstance().getCallBackService().registerCallbackListener(new SharedCalendarCallback(), this);
         this.calendarManager = new CalendarManager();
+        TaskScheduler scheduler = this.getStemApi().scheduler();
+        scheduler.registerCallback(new CalendarBuilderCallback());
+        scheduler.registerCallback(new EVSCallback());
+        scheduler.registerCallback(new SharedCalendarCallback());
         this.webApiHandler = new WebApiHandler(this);
     }
 
     @Override
     public void onDisable() {
+        if (this.webApiHandler != null) {
+            this.webApiHandler.disable();
+        }
     }
-
 
     public CalendarManager getCalendarManager() {
         return calendarManager;

@@ -12,10 +12,8 @@
 
 package de.linzn.calendar;
 
-
 import de.linzn.calendar.objects.ICalendarType;
 import de.linzn.calendar.objects.TrashType;
-import de.linzn.stem.STEMApp;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
 import net.fortuna.ical4j.data.UnfoldingReader;
@@ -24,107 +22,143 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.Clazz;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.io.Reader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.*;
 
+/**
+ * Holds all public events of the .ics files in the calendarFiles folder.
+ * Files are only parsed again when one of them has changed.
+ */
 public class CalendarManager {
-    private Calendar calendar;
+    /* look-ahead of the reminder list: 30 hours */
+    private static final long REMINDER_WINDOW_MILLIS = 108_000_000L;
+
+    private volatile List<VEvent> events = List.of();
+    private String loadedSignature = null;
 
     public CalendarManager() {
         this.loadCalendar();
     }
 
-
-    public ICalendarType getNextTrash(TrashType trashType) {
-        Date date = new Date();
-        java.util.Calendar tempCalendar = java.util.Calendar.getInstance();
-        tempCalendar.setTime(date);
-        tempCalendar.set(java.util.Calendar.MILLISECOND, 0);
-        tempCalendar.set(java.util.Calendar.SECOND, 0);
-        tempCalendar.set(java.util.Calendar.MINUTE, 0);
-        tempCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
-        date = tempCalendar.getTime();
-
-        if (calendar != null) {
-            for (Object o : calendar.getComponents("VEVENT")) {
-                VEvent vEvent = (VEvent) o;
-                long dateToday = date.getTime();
-                long dateEvent = vEvent.getStartDate().getDate().getTime();
-
-                if ((dateEvent - dateToday >= 0)) {
-                    ICalendarType iTrash = ICalendarType.getCalendarTypeInstance(vEvent);
-                    if (iTrash.getType() == trashType) {
-                        return iTrash;
-                    }
-                }
-            }
+    static File calendarDirectory() {
+        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
+        if (!calendarDirectory.exists() && !calendarDirectory.mkdirs()) {
+            CalendarPlugin.calendarPlugin.getPluginLogger().error("Could not create " + calendarDirectory);
         }
-        return null;
+        return calendarDirectory;
     }
 
+    /**
+     * Parse an ics file. The reader is always closed.
+     */
+    public static Calendar parse(File file) throws IOException, ParserException {
+        try (Reader reader = Files.newBufferedReader(file.toPath(), StandardCharsets.UTF_8)) {
+            return new CalendarBuilder().build(new UnfoldingReader(reader));
+        }
+    }
 
-    public List<ICalendarType> getCalenderEntriesList(Date date) {
-        java.util.Calendar tempCalendar = java.util.Calendar.getInstance();
-        tempCalendar.setTime(date);
-        tempCalendar.set(java.util.Calendar.MILLISECOND, 0);
-        tempCalendar.set(java.util.Calendar.SECOND, 0);
-        tempCalendar.set(java.util.Calendar.MINUTE, 0);
-        tempCalendar.set(java.util.Calendar.HOUR_OF_DAY, 0);
-        date = tempCalendar.getTime();
+    private static long startOfToday() {
+        return LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
 
-        List<ICalendarType> iCalendarTypes = new ArrayList<>();
-        if (calendar != null) {
-            for (Object o : calendar.getComponents("VEVENT")) {
-                VEvent vEvent = (VEvent) o;
+    private static long startOf(Date date) {
+        return date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate().atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+    }
 
-                long dateToday = date.getTime();
-                long dateEvent = vEvent.getStartDate().getDate().getTime();
+    private static Date startDate(VEvent vEvent) {
+        if (vEvent.getStartDate() == null || vEvent.getStartDate().getDate() == null) {
+            return null;
+        }
+        return vEvent.getStartDate().getDate();
+    }
 
-
-                if ((dateEvent - dateToday >= 0) && dateEvent <= (dateToday + 108000000)) {
-                    iCalendarTypes.add(ICalendarType.getCalendarTypeInstance(vEvent));
-                }
+    /**
+     * @return the next (earliest upcoming) entry of the given trash type or null
+     */
+    public ICalendarType getNextTrash(TrashType trashType) {
+        long today = startOfToday();
+        VEvent next = null;
+        long nextDate = Long.MAX_VALUE;
+        for (VEvent vEvent : this.events) {
+            Date start = startDate(vEvent);
+            if (start == null || start.getTime() < today || start.getTime() >= nextDate) {
+                continue;
+            }
+            if (ICalendarType.getCalendarTypeInstance(vEvent).getType() == trashType) {
+                next = vEvent;
+                nextDate = start.getTime();
             }
         }
+        return next == null ? null : ICalendarType.getCalendarTypeInstance(next);
+    }
+
+    /**
+     * @return entries from the start of the given day until 30 hours later, sorted by date
+     */
+    public List<ICalendarType> getCalenderEntriesList(Date date) {
+        long dayStart = startOf(date);
+        List<ICalendarType> iCalendarTypes = new ArrayList<>();
+        for (VEvent vEvent : this.events) {
+            Date start = startDate(vEvent);
+            if (start == null) {
+                continue;
+            }
+            long dateEvent = start.getTime();
+            if (dateEvent >= dayStart && dateEvent <= dayStart + REMINDER_WINDOW_MILLIS) {
+                iCalendarTypes.add(ICalendarType.getCalendarTypeInstance(vEvent));
+            }
+        }
+        iCalendarTypes.sort(Comparator.comparing(ICalendarType::getDate));
         return iCalendarTypes;
     }
 
-    public void loadCalendar() {
-        Calendar calendar = new Calendar();
-
-        /* Load calendar files */
-        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
-        if (!calendarDirectory.exists()) {
-            calendarDirectory.mkdir();
+    private static File[] calendarFiles() {
+        File[] files = calendarDirectory().listFiles(file -> file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(".ics"));
+        if (files == null) {
+            return new File[0];
         }
+        Arrays.sort(files, Comparator.comparing(File::getName));
+        return files;
+    }
 
-        File[] calendarDirectoryFiles = calendarDirectory.listFiles();
+    private static String signature(File[] files) {
+        StringBuilder builder = new StringBuilder();
+        for (File file : files) {
+            builder.append(file.getName()).append(':').append(file.lastModified()).append(':').append(file.length()).append(';');
+        }
+        return builder.toString();
+    }
 
-        for (File file : calendarDirectoryFiles) {
-            if (file.isFile()) {
-                if (file.getName().toLowerCase().endsWith(".ics")) {
-                    Calendar tempCalendar = null;
-                    try {
-                        tempCalendar = new CalendarBuilder().build(new UnfoldingReader(new FileReader(file)));
-                        STEMApp.LOGGER.DEBUG("New calender data added :: " + file.getName());
-                    } catch (IOException | ParserException e) {
-                        STEMApp.LOGGER.ERROR("Error while parsing calendar: " + file.getName());
-                        STEMApp.LOGGER.ERROR(e);
-                    }
-                    if (tempCalendar != null) {
-                        for (Object o : tempCalendar.getComponents("VEVENT")) {
-                            VEvent vevent = (VEvent) o;
-                            if (vevent.getClassification() != Clazz.PRIVATE) {
-                                calendar.getComponents().add(vevent);
-                            }
-                        }
+    /**
+     * Reload all calendar files if one of them changed.
+     */
+    public synchronized void loadCalendar() {
+        File[] files = calendarFiles();
+        String signature = signature(files);
+        if (signature.equals(this.loadedSignature)) {
+            return;
+        }
+        List<VEvent> loaded = new ArrayList<>();
+        for (File file : files) {
+            try {
+                Calendar tempCalendar = parse(file);
+                for (Object o : tempCalendar.getComponents("VEVENT")) {
+                    VEvent vevent = (VEvent) o;
+                    if (vevent.getClassification() != Clazz.PRIVATE) {
+                        loaded.add(vevent);
                     }
                 }
+                CalendarPlugin.calendarPlugin.getPluginLogger().debug("Calendar data loaded :: " + file.getName());
+            } catch (IOException | ParserException | RuntimeException e) {
+                CalendarPlugin.calendarPlugin.getPluginLogger().error("Error while parsing calendar: " + file.getName(), e);
             }
         }
-        this.calendar = calendar;
+        this.events = List.copyOf(loaded);
+        this.loadedSignature = signature;
     }
 }

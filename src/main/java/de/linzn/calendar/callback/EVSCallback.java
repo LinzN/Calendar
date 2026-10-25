@@ -12,40 +12,42 @@
 
 package de.linzn.calendar.callback;
 
-
+import de.linzn.calendar.CalendarManager;
 import de.linzn.calendar.CalendarPlugin;
-import de.linzn.stem.STEMApp;
 import de.linzn.stem.taskManagment.AbstractCallback;
 import de.linzn.stem.taskManagment.CallbackTime;
 import de.linzn.stem.taskManagment.operations.OperationOutput;
 import de.linzn.stem.taskManagment.operations.defaultOperations.ScriptOperation;
-import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.data.ParserException;
-import net.fortuna.ical4j.data.UnfoldingReader;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
+/**
+ * Downloads the EVS waste calendar once a day via script. The new file only replaces the current one
+ * if it can be parsed.
+ */
 public class EVSCallback extends AbstractCallback {
+
+    private static File calendarDirectory() {
+        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
+        if (!calendarDirectory.exists()) {
+            calendarDirectory.mkdirs();
+        }
+        return calendarDirectory;
+    }
 
     @Override
     public void operation() {
-        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
-        if (!calendarDirectory.exists()) {
-            calendarDirectory.mkdir();
-        }
-
-        String mmseData = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("trash.mmse_data");
-        String proxy = CalendarPlugin.calendarPlugin.getDefaultConfig().getString("general.proxy_server");
-        boolean useProxy = CalendarPlugin.calendarPlugin.getDefaultConfig().getBoolean("general.use_proxy", false);
+        File calendarDirectory = calendarDirectory();
         File file = new File(calendarDirectory, "_online_evs.temp");
-        if (file.exists()) {
-            file.delete();
+        if (file.exists() && !file.delete()) {
+            CalendarPlugin.calendarPlugin.getPluginLogger().warning("Could not delete old temp file " + file);
         }
-
-
         ScriptOperation scriptOperation = new ScriptOperation("get_evs-data");
         scriptOperation.addParameter("scriptdestination", calendarDirectory.getAbsolutePath());
         scriptOperation.addParameter("outfile", file.getAbsolutePath());
@@ -54,34 +56,28 @@ public class EVSCallback extends AbstractCallback {
 
     @Override
     public void callback(OperationOutput operationOutput) {
-        JSONObject jsonObject = (JSONObject) operationOutput.getData();
-        if (operationOutput.getExit() != 0) {
-            for (Object line : jsonObject.getJSONArray("outputLines")) {
-                STEMApp.LOGGER.WARNING(line);
-            }
-            for (Object line : jsonObject.getJSONArray("errorLines")) {
-                STEMApp.LOGGER.WARNING(line);
+        if (operationOutput.getExit() != 0 && operationOutput.getData() instanceof JSONObject jsonObject) {
+            JSONArray lines = jsonObject.optJSONArray("outputLines");
+            if (lines != null) {
+                for (Object line : lines) {
+                    CalendarPlugin.calendarPlugin.getPluginLogger().warning(String.valueOf(line));
+                }
             }
         }
-        File calendarDirectory = new File(CalendarPlugin.calendarPlugin.getDataFolder(), "calendarFiles");
+        File calendarDirectory = calendarDirectory();
         File tempFile = new File(calendarDirectory, "_online_evs.temp");
-
-        try {
-            new CalendarBuilder().build(new UnfoldingReader(new FileReader(tempFile)));
-            File file = new File(calendarDirectory, "online_evs.ics");
-            if (file.exists()) {
-                file.delete();
-            }
-            tempFile.renameTo(file);
-        } catch (IOException | ParserException e) {
-            STEMApp.LOGGER.WARNING("Error in new EVS file. Skipping!");
-            if (tempFile.exists()) {
-                tempFile.delete();
-            }
+        if (!tempFile.exists()) {
+            CalendarPlugin.calendarPlugin.getPluginLogger().warning("EVS calendar pull produced no file (exit " + operationOutput.getExit() + ")");
+            return;
         }
-
-
-        STEMApp.LOGGER.DEBUG("EVS calender pull finish " + operationOutput.getExit());
+        try {
+            CalendarManager.parse(tempFile);
+            Files.move(tempFile.toPath(), new File(calendarDirectory, "online_evs.ics").toPath(), StandardCopyOption.REPLACE_EXISTING);
+        } catch (IOException | ParserException | RuntimeException e) {
+            CalendarPlugin.calendarPlugin.getPluginLogger().warning("Error in new EVS file. Skipping!");
+            tempFile.delete();
+        }
+        CalendarPlugin.calendarPlugin.getPluginLogger().debug("EVS calender pull finish " + operationOutput.getExit());
     }
 
     @Override
